@@ -16,6 +16,10 @@ const siteConfig = {
   header: {
     links: [
       {
+        label:'Template',
+        href:'/template'
+      },
+      {
         id: 'features',
         label: 'Features',
       },
