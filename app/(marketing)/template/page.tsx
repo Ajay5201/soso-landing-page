@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import axiosInstance from 'utils/axiosInstance';
 import {
   Box,
   Container,
@@ -11,14 +13,17 @@ import {
   VStack,
   Wrap,
   WrapItem,
-  Select,
   Image,
   Button,
-} from '@chakra-ui/react'
+  Spinner,
+  Center,
+  useToast,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
-
+ 
 const categories = [
   'All',
+  'Business',
   'Welcome',
   'Engagement',
   'Onboarding',
@@ -27,115 +32,170 @@ const categories = [
   'Lead Nurture',
   'Survey',
   'Holiday',
-   'SaaS',
- ]
-
- 
-const templates = [
-  {
-    title: 'Black Friday',
-    image: 'https://nonprodmailapp.s3.amazonaws.com/7be0d88a-926d-434d-adf4-7313e0a00f61_7be0d88a-926d-434d-adf4-7313e0a00f61.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250512T131814Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604800&X-Amz-Credential=AKIAYM7POGCBUAH34F3C%2F20250512%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=0ddc03850de4b0ee23d7943811b05276f2170a981ac6b6074f40eb74d834ca8f',
-  },
-  {
-    title: 'Black Friday',
-    image: 'https://nonprodmailapp.s3.amazonaws.com/753970c6-2b72-4674-b566-7d449b19f1a1_753970c6-2b72-4674-b566-7d449b19f1a1.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250512T165912Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604800&X-Amz-Credential=AKIAYM7POGCBUAH34F3C%2F20250512%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=609abfed977b896fc546a2fd81e6d55eeafd33c27bea1dd973b20170d899c14f',
-  },
-  {
-    title: 'Black Friday',
-    image: 'https://nonprodmailapp.s3.amazonaws.com/2c043c98-bfd0-457c-9b31-e07dccd6dd81_2c043c98-bfd0-457c-9b31-e07dccd6dd81.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250512T181200Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604800&X-Amz-Credential=AKIAYM7POGCBUAH34F3C%2F20250512%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=374d558b7bb775f85265a7521f05ee7408dd545bb219b6e23576ddf28ed8eeba',
-  },
-  {
-    title: 'Black Friday',
-    image: 'https://nonprodmailapp.s3.amazonaws.com/7be0d88a-926d-434d-adf4-7313e0a00f61_7be0d88a-926d-434d-adf4-7313e0a00f61.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250512T131814Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604800&X-Amz-Credential=AKIAYM7POGCBUAH34F3C%2F20250512%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=0ddc03850de4b0ee23d7943811b05276f2170a981ac6b6074f40eb74d834ca8f',
-  },
-  {
-    title: 'Black Friday',
-    image: 'https://nonprodmailapp.s3.amazonaws.com/7be0d88a-926d-434d-adf4-7313e0a00f61_7be0d88a-926d-434d-adf4-7313e0a00f61.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250512T131814Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604800&X-Amz-Credential=AKIAYM7POGCBUAH34F3C%2F20250512%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=0ddc03850de4b0ee23d7943811b05276f2170a981ac6b6074f40eb74d834ca8f',
-  },
-  {
-    title: 'Black Friday',
-    image: 'https://nonprodmailapp.s3.amazonaws.com/7be0d88a-926d-434d-adf4-7313e0a00f61_7be0d88a-926d-434d-adf4-7313e0a00f61.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250512T131814Z&X-Amz-SignedHeaders=host&X-Amz-Expires=604800&X-Amz-Credential=AKIAYM7POGCBUAH34F3C%2F20250512%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=0ddc03850de4b0ee23d7943811b05276f2170a981ac6b6074f40eb74d834ca8f',
-  },
-]
+  'SaaS',
+];
 
 export default function TemplatePage() {
-    const router = useRouter();
+  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchText, setSearchText] = useState('');
+  const [debouncedSearchText, setDebouncedSearchText] = useState('');
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  
+
+   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchText(searchText);
+    }, 500);  
+
+    return () => clearTimeout(handler);
+  }, [searchText]);
+
+  const fetchTemplates = async (category: string, search: string) => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get('/prebuilt-template/getAllTemplate', {
+        params: {
+          category: category === 'All' ? '' : category,
+          searchTerm: search || '',
+          page: 0,
+          size: 10,
+        },
+        
+      });
+       if(!response.data.resultData){
+           toast({
+          title: 'Failed to load template',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        }
+      else{
+      setTemplates(response.data.resultData?.content || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch templates:', err);
+        toast({
+          title: 'Failed to load template',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTemplates(selectedCategory, debouncedSearchText);
+  }, [selectedCategory, debouncedSearchText]);
 
   return (
     <Container maxW="container.xl" py={20}>
       <VStack spacing={6} align="start">
-        <Heading as='h1'   >
+        <Heading as="h1" textAlign="center" alignSelf="center">
           Free Email Templates for All Use Cases
         </Heading>
-        <Text>
+        <Text textAlign="center" alignSelf="center">
           Drive 3X conversions with interactive, beautiful, HTML and AMP email templates for all use cases
         </Text>
 
-         <Wrap>
+        {/* Category Filter */}
+        <Wrap>
           {categories.map((cat) => (
             <WrapItem key={cat}>
-              <Tag size="lg" variant="subtle" colorScheme="purple" cursor="pointer">
+              <Tag
+                size="lg"
+                variant={selectedCategory === cat ? 'solid' : 'subtle'}
+                colorScheme="purple"
+                cursor="pointer"
+                onClick={() => setSelectedCategory(cat)}
+              >
                 {cat}
               </Tag>
             </WrapItem>
           ))}
         </Wrap>
 
-         <SimpleGrid   w="full">
-          <Input placeholder="Search for Templates" />
+        {/* Search Input */}
+        <SimpleGrid w="full">
+          <Input
+            placeholder="Search for Templates"
+            size="lg"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
         </SimpleGrid>
 
-         <SimpleGrid columns={[1, 2, 3, 5]} spacing={6} w="full" pt={6}>
-            {templates.map((template) => (
-            <Box key={template.title} role="group" position="relative">
-                <Box
+        {/* Templates Grid */}
+        {loading ? (
+          <Center w="full" py={10}>
+            <Spinner size="xl" color="purple.500" />
+          </Center>
+        ) : (
+          <SimpleGrid columns={[1, 2, 3, 5]} spacing={6} w="full" pt={1}>
+            {templates.map((template, idx) => (
+              <Box key={idx} role="group" position="relative">
+              <Box
                 borderWidth="1px"
                 borderRadius="lg"
                 overflow="hidden"
                 _hover={{ boxShadow: 'md' }}
                 position="relative"
-                height="300px"  
+                height="400px"
                 bg="white"
-                >
-                <Image
-                    src={template.image}
-                    alt={template.title}
-                    objectFit="cover"
-                    width="100%"
-                    height="100%"
-                />
+              >
+                  <Image
+                    src={template.templateImg}
+                    alt={template.templateName}
+                    htmlWidth="100%"
+                    htmlHeight="100%"
+                    objectFit="contain"
+                    display="block"
+                  
+                  />
 
                 {/* Hover Overlay */}
                 <Box
-                    position="absolute"
-                    top="0"
-                    left="0"
-                    w="full"
-                    h="full"
-                    bg="rgba(0, 0, 0, 0.6)"
-                    color="white"
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    opacity="0"
-                    transition="opacity 0.3s"
-                    _groupHover={{ opacity: 1 }}
-                    pointerEvents="none"
-                    zIndex="1"
+                  position="absolute"
+                  top="0"
+                  left="0"
+                  w="full"
+                  h="full"
+                  bg="rgba(0, 0, 0, 0.6)"
+                  color="white"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  opacity="0"
+                  transition="opacity 0.3s"
+                  _groupHover={{ opacity: 1 }}
+                  pointerEvents="none"
+                  zIndex="1"
                 >
-                    <Text fontSize="lg" fontWeight="bold" mb={2}>
-                    {template.title}
-                    </Text>
-                    <Button onClick={() => router.push('/template-preview')}  size="sm" colorScheme="purple" pointerEvents="auto">
+                  <Text fontSize="lg" fontWeight="bold" mb={2}>
+                    {template.templateName}
+                  </Text>
+                  <Button
+                    onClick={() => router.push(`/template-preview?templateId=${template.templateId}`)}
+                    size="sm"
+                    colorScheme="purple"
+                    pointerEvents="auto"
+                  >
                     Preview
-                    </Button>
+                  </Button>
                 </Box>
-                </Box>
+              </Box>
             </Box>
             ))}
-        </SimpleGrid>
+          </SimpleGrid>
+        )}
       </VStack>
     </Container>
-  )
+  );
 }
