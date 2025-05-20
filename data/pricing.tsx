@@ -1,113 +1,114 @@
 import { HStack, Text } from '@chakra-ui/react'
 
 export default {
-  title: 'Pricing for every stage',
+  title: 'Choose Your Plan',
   description:
-    'Pay once and get life-time access to our high quality components.',
+    'Select the perfect plan for your email marketing needs. All plans include AMP support and interactive email features.',
   plans: [
     {
-      id: 'oss',
-      title: 'Open Source',
-      description: 'Basic compoents, perfect to get started.',
-      price: 'Free',
+      id: 'starter',
+      title: 'Starter',
+      description: 'Perfect for small businesses and startups',
+      price: '$29',
       features: [
         {
-          title: 'MIT License',
+          title: 'Up to 5,000 emails/month',
         },
         {
-          title: 'Authentication (Clerk/Supabase/Magic)',
+          title: 'Basic interactive templates',
         },
         {
-          title: 'Form (react-hook-form)',
+          title: 'AMP email support',
         },
         {
-          title: 'Modals manager',
+          title: 'Basic analytics',
         },
         {
-          title: 'Hotkeys',
+          title: 'Email support',
         },
         {
-          title: 'Web3 components',
-        },
-        {
-          title: 'And much more...',
+          title: '1 team member',
         },
       ],
       action: {
-        href: '#',
+        href: '/signup',
       },
     },
     {
-      id: 'bootstrap',
-      title: 'Bootstrap',
-      description: 'Complete frontend stack for bootstrappers and small teams.',
-      price: 'Free',
+      id: 'pro',
+      title: 'Professional',
+      description: 'Ideal for growing businesses',
+      price: '$79',
       isRecommended: true,
       features: [
         {
-          title: 'One project',
+          title: 'Up to 50,000 emails/month',
         },
         {
-          title: 'One developer',
+          title: 'Advanced interactive templates',
         },
         {
-          title: 'Advanced components',
+          title: 'Priority AMP support',
         },
         {
-          title: 'Multiple themes',
+          title: 'Advanced analytics',
         },
         {
-          title: 'Next.js and Electron boilerplates',
+          title: 'Priority support',
         },
         {
-          title: 'Private discord community',
+          title: '5 team members',
         },
         {
-          title: '1 year of updates',
+          title: 'A/B testing',
         },
-        null,
         {
-          title: 'Private beta access',
-          iconColor: 'green.500',
+          title: 'API access',
         },
       ],
       action: {
-        href: 'https://appulse.gumroad.com/l/saas-ui-pro-pre-order?variant=Single%20license',
+        href: '/signup',
       },
     },
     {
-      id: 'startup',
-      title: 'Startup',
-      description: 'Unlimited license for growing teams.',
-      price: (
-        <HStack>
-          <Text textDecoration="line-through" fontSize="sm" color="gray.400">
-            €999,-
-          </Text>
-          <Text>€499,-</Text>
-        </HStack>
-      ),
+      id: 'enterprise',
+      title: 'Enterprise',
+      description: 'For large organizations with custom needs',
+      price: 'Custom',
       features: [
         {
-          title: 'Unlimited projects',
+          title: 'Unlimited emails',
         },
         {
-          title: 'Unlimited developers',
+          title: 'Custom interactive templates',
         },
         {
-          title: '1 year of updates',
+          title: 'Dedicated AMP support',
         },
         {
-          title: 'Everything from Bootstrap',
+          title: 'Custom analytics',
         },
-        null,
         {
-          title: 'Private beta access',
-          iconColor: 'green.500',
+          title: '24/7 dedicated support',
+        },
+        {
+          title: 'Unlimited team members',
+        },
+        {
+          title: 'Advanced A/B testing',
+        },
+        {
+          title: 'Full API access',
+        },
+        {
+          title: 'Custom integrations',
+        },
+        {
+          title: 'SLA guarantee',
         },
       ],
       action: {
-        href: 'https://appulse.gumroad.com/l/saas-ui-pro-pre-order?variant=Unlimited%20license',
+        href: '/contact',
       },
     },
   ],

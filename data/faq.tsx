@@ -5,26 +5,24 @@ const faq = {
   // description: '',
   items: [
     {
-      q: 'How many products can I use Saas UI Pro for?',
-      a: (
-        <>
-          The single license can be used for one commercial application or SaaS
-          product and unlimited internal tools. You can buy as many licenses as
-          you need. <br /> The unlimited license does not have any restrictions.
-        </>
-      ),
+      q: 'Do I need coding skills to use this interactive email builder?',
+      a: 'Not at all! Our drag-and-drop builder makes it easy to create interactive emails without any coding. However, developers can customize elements using our flexible API.',
     },
     {
-      q: 'Can I use Saas UI Pro for client work?',
-      a: "Yes, that's totally up to you, as long as it fits the license you purchase.",
+      q: 'Are interactive emails supported by all email clients?',
+      a: 'Most modern email clients, including Gmail, Yahoo, and Outlook, support interactive emails. We also provide fallbacks to ensure a seamless experience on non-supported clients.',
     },
     {
-      q: 'Can I use Saas UI Pro for Open Source projects?',
-      a: 'No currently not. A large part of Saas UI is already released under MIT license. We try to give back to the community as much as possible.',
+      q: 'Can I integrate this email builder with my existing marketing tools?',
+      a: 'Yes! Our platform integrates with HubSpot, Mailchimp, Klaviyo, Salesforce, and many other marketing automation tools for a smooth workflow.',
     },
     {
-      q: 'Does Saas UI include Figma, Sketch or other design files?',
-      a: 'No, Saas UI does not include any design assets. Maintaining design resources costs a lot of extra effort. We believe small teams can move much faster by designing directly in code, with help of Storybooks.',
+      q: 'How do I track the performance of my interactive emails?',
+      a: 'We provide in-depth analytics, including open rates, engagement tracking, and conversion metrics, so you can optimize your campaigns in real-time.',
+    },
+    {
+      q: 'Is there a free trial available?',
+      a: 'Yes! We offer a free trial so you can explore our features before committing to a plan.',
     },
   ],
 }

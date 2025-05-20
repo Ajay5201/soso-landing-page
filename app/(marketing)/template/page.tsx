@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import axiosInstance from 'utils/axiosInstance';
 import {
   Box,
@@ -25,17 +25,14 @@ const categories = [
   'All',
   'Business',
   'Welcome',
-  'Engagement',
   'Onboarding',
   'Feedback',
   'Promotional',
-  'Lead Nurture',
   'Survey',
-  'Holiday',
   'SaaS',
 ];
 
-export default function TemplatePage() {
+ function TemplatePreviewContent() {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchText, setSearchText] = useState('');
@@ -105,7 +102,7 @@ export default function TemplatePage() {
         </Text>
 
         {/* Category Filter */}
-        <Wrap>
+           <Wrap w="full" justify="center" spacing={4}>
           {categories.map((cat) => (
             <WrapItem key={cat}>
               <Tag
@@ -120,35 +117,43 @@ export default function TemplatePage() {
             </WrapItem>
           ))}
         </Wrap>
+  
 
         {/* Search Input */}
-        <SimpleGrid w="full">
+        <Box w="100%"  alignSelf="center">
           <Input
             placeholder="Search for Templates"
             size="lg"
+            fontSize="lg"
+            py={6}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-        </SimpleGrid>
+        </Box>
 
         {/* Templates Grid */}
         {loading ? (
           <Center w="full" py={10}>
             <Spinner size="xl" color="purple.500" />
           </Center>
+        ) : templates.length === 0 ? (
+          <Center w="full" py={20} flexDirection="column">
+            <Text fontSize="lg" color="gray.600">
+              No result found. Try with other keywords
+            </Text>
+          </Center>
         ) : (
           <SimpleGrid columns={[1, 2, 3, 5]} spacing={6} w="full" pt={1}>
             {templates.map((template, idx) => (
               <Box key={idx} role="group" position="relative">
-              <Box
-                borderWidth="1px"
-                borderRadius="lg"
-                overflow="hidden"
-                _hover={{ boxShadow: 'md' }}
-                position="relative"
-                height="400px"
-                bg="white"
-              >
+                <Box
+                  borderRadius="lg"
+                  overflow="hidden"
+                  _hover={{ boxShadow: 'md' }}
+                  position="relative"
+                  height="400px"
+                  bg="white"
+                >
                   <Image
                     src={template.templateImg}
                     alt={template.templateName}
@@ -156,42 +161,42 @@ export default function TemplatePage() {
                     htmlHeight="100%"
                     objectFit="contain"
                     display="block"
-                  
                   />
 
-                {/* Hover Overlay */}
-                <Box
-                  position="absolute"
-                  top="0"
-                  left="0"
-                  w="full"
-                  h="full"
-                  bg="rgba(0, 0, 0, 0.6)"
-                  color="white"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems="center"
-                  opacity="0"
-                  transition="opacity 0.3s"
-                  _groupHover={{ opacity: 1 }}
-                  pointerEvents="none"
-                  zIndex="1"
-                >
-                  <Text fontSize="lg" fontWeight="bold" mb={2}>
-                    {template.templateName}
-                  </Text>
-                  <Button
-                    onClick={() => router.push(`/template-preview?templateId=${template.templateId}`)}
-                    size="sm"
-                    colorScheme="purple"
-                    pointerEvents="auto"
+                  <Box
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    w="full"
+                    h="full"
+                    bg="rgba(0, 0, 0, 0.6)"
+                    color="white"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    opacity="0"
+                    transition="opacity 0.3s"
+                    _groupHover={{ opacity: 1 }}
+                    pointerEvents="none"
+                    zIndex="1"
                   >
-                    Preview
-                  </Button>
+                    <Text fontSize="lg" fontWeight="bold" mb={2}>
+                      {template.templateName}
+                    </Text>
+                    <Button
+                      onClick={() =>
+                        router.push(`/template-preview?templateId=${template.templateId}`)
+                      }
+                      size="sm"
+                      colorScheme="purple"
+                      pointerEvents="auto"
+                    >
+                      Preview
+                    </Button>
+                  </Box>
                 </Box>
               </Box>
-            </Box>
             ))}
           </SimpleGrid>
         )}
@@ -199,3 +204,22 @@ export default function TemplatePage() {
     </Container>
   );
 }
+
+function LoadingFallback() {
+  return (
+    <Center py={20}>
+      <Spinner size="xl" color="purple.500" />
+      <Text ml={4}>Loading template preview...</Text>
+    </Center>
+  );
+}
+
+
+export default function TemplatePreview() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <TemplatePreviewContent />
+    </Suspense>
+  );
+}
+

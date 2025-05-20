@@ -2,39 +2,38 @@ export default {
   title: 'Loved by tech people',
   items: [
     {
-      name: 'Eelco Wiersma',
-      description: 'Founder Saas UI',
-      avatar:
-        'https://pbs.twimg.com/profile_images/1470742164024008706/k-eXHtu0_normal.jpg',
+      name: 'Emily Roberts',
+      description: 'Head of Email Marketing, Growthly',
+      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
       children: (
         <>
-          “With SaaS UI I am able to produce high quality dashboard apps and
-          internal tools without a lot of design skills. The ROI really is
-          amazing.”
+          “Since switching to this interactive email builder, our email CTR has
+          skyrocketed by 250%! Customers love the interactive elements, and
+          we’ve seen a direct impact on sales.”
         </>
       ),
     },
     {
-      name: 'Caroline Yahaya',
-      description: 'Fullstack Developer',
+      name: 'James Carter',
+      description: 'Founder, EngageBoost',
       avatar: '/static/images/avatar2.jpg',
       children: (
         <>
-          “Saas UI allows me to build beautiful and functional UI super fast.
-          The components are very well thought out and the Next.js starter kit
-          saved me at least 100 hours of work.”
+          “This tool has revolutionized our email marketing strategy. We can now
+          create interactive campaigns in minutes without any coding. Our email
+          engagement rates have never been higher!”
         </>
       ),
     },
     {
-      name: 'Alberto Vazquez',
-      description: 'Frontend Engineer',
+      name: 'Sophia Martinez',
+      description: 'Marketing Director, BrightReach',
       avatar: '/static/images/avatar3.jpg',
       children: (
         <>
-          “Saas UI gave us a perfect starting point for our project, having the
-          storybooks already set up with beautifully crafted components and
-          fully mocked pages was a treat.”
+          “Interactive emails were always a challenge until we found this
+          platform. It’s seamless, intuitive, and delivers outstanding
+          performance. Our customers actually look forward to our emails now!”
         </>
       ),
     },

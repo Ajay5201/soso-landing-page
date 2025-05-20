@@ -15,17 +15,20 @@ import {
   Spinner,
   Center,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Tabs, TabList, Tab } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { CiMobile3 } from 'react-icons/ci';
 import { FaDesktop } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
 import axiosInstance from 'utils/axiosInstance';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+import Link from 'next/link';
+
 
 const MotionBox = motion.div;
 
-export default function TemplatePreview() {
+ function PrebuiltTemplateContent() {
   const searchParams = useSearchParams();
   const templateId = searchParams.get('templateId');
 
@@ -126,13 +129,28 @@ const handleSubmit = async () => {
   return (
     <Container maxW="container.xl" py={20}>
       <Box display="flex" flexDir={{ base: 'column', md: 'row' }} p={5} gap={10}>
-        <Box flex="1" pt={20}>
-          <Heading as="h1" size="lg" mb={3}>
+        
+        <Box flex="1" >
+          <Breadcrumb fontSize="md" mb={20}>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={Link} href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+        
+            <BreadcrumbItem>
+              <BreadcrumbLink as={Link} href="/template">Template</BreadcrumbLink>
+            </BreadcrumbItem>
+
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>{template.templateName}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+
+          <Heading as="h1" fontSize="36px" mb={3}>
             {template.templateName}
           </Heading>
-          <Text mb={4}>
+          <Text fontSize="16px" mb={4}>
             {/* You can add description to your entity if needed */}
-            A ready-to-use email template to boost engagement.
+            {template.templateDescription}
           </Text>
 
           <HStack spacing={2} mb={4} wrap="wrap">
@@ -143,15 +161,15 @@ const handleSubmit = async () => {
             ))}
           </HStack>
 
-          <Button colorScheme="purple" mb={2}>
+          <Button size="lg" colorScheme="purple"  mb={2} >
             + Use this Template
           </Button>
-          <Button mb={2} ml={5} variant="outline">
+          <Button size="lg" mb={2} ml={5} variant="outline">
             Share
           </Button>
 
           <Box mt={6}>
-            <Text fontWeight="medium" mb={2}>
+            <Text fontSize="16px" fontWeight="medium" mb={2}>
               Get this template in your inbox
             </Text>
             <HStack>
@@ -159,9 +177,11 @@ const handleSubmit = async () => {
                 placeholder="Enter your email ID"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                w={250}
+                size="lg"
+                w={400}
+                mr={2}
               />
-              <Button onClick={handleSubmit} colorScheme="purple">
+              <Button size="md" onClick={handleSubmit} colorScheme="purple">
                 Submit
               </Button>
             </HStack>
@@ -230,5 +250,22 @@ const handleSubmit = async () => {
         </Box>
       </Box>
     </Container>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <Center py={20}>
+      <Spinner size="xl" color="purple.500" />
+      <Text ml={4}>Loading template preview...</Text>
+    </Center>
+  );
+}
+
+export default function PrebuiltTemplate() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <PrebuiltTemplateContent />
+    </Suspense>
   );
 }

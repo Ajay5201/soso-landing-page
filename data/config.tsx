@@ -8,11 +8,11 @@ import { Logo } from './logo'
 const siteConfig = {
   logo: Logo,
   seo: {
-    title: 'Saas UI',
-    description: 'The React component library for startups',
+    title: 'Social Society',
+    description: 'Interactive email communication at ease',
   } as NextSeoProps,
-  termsUrl: '#',
-  privacyUrl: '#',
+  termsUrl: '/terms',
+  privacyUrl: '/privacy',
   header: {
     links: [
       {
@@ -31,6 +31,14 @@ const siteConfig = {
         id: 'faq',
         label: 'FAQ',
       },
+            {
+        label: 'Terms',
+        href: '/terms',
+      },
+      {
+        label: 'Privacy',
+        href: '/privacy',
+      },
       {
         label: 'Login',
         href: '/login',
@@ -45,21 +53,28 @@ const siteConfig = {
   footer: {
     copyright: (
       <>
-        Built by{' '}
-        <Link href="https://twitter.com/Pagebakers">Eelco Wiersma</Link>
+       &copy; {new Date().getFullYear()} Social Society. All rights reserved.
       </>
     ),
     links: [
       {
-        href: 'mailto:hello@saas-ui.dev',
+        href: '/terms',
+        label: 'Terms & Conditions',
+      },
+      {
+        href: '/privacy',
+        label: 'Privacy Policy',
+      },
+      {
+        href: 'mailto:support@socialsociety.in',
         label: 'Contact',
       },
       {
-        href: 'https://twitter.com/saas_js',
+        href: 'https://twitter.com/socialsociety',
         label: <FaTwitter size="14" />,
       },
       {
-        href: 'https://github.com/saas-js/saas-ui',
+        href: 'https://github.com/socialsociety',
         label: <FaGithub size="14" />,
       },
     ],
