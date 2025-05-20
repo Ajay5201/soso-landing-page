@@ -18,8 +18,8 @@ import {
 import { Suspense, useEffect, useState } from 'react';
 import { Tabs, TabList, Tab } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { CiMobile3 } from 'react-icons/ci';
-import { FaDesktop } from 'react-icons/fa';
+import { CiMobile3, CiShare2 } from 'react-icons/ci';
+import { FaDesktop, FaPlus, FaShareAlt } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
 import axiosInstance from 'utils/axiosInstance';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
@@ -161,11 +161,18 @@ const handleSubmit = async () => {
             ))}
           </HStack>
 
-          <Button size="lg" colorScheme="purple"  mb={2} >
-            + Use this Template
+          <Button
+            height="60px"
+            fontSize="lg"
+            px={8}
+            colorScheme="purple"
+            mb={2}
+            leftIcon={<FaPlus />}
+          >
+            Use this Template
           </Button>
-          <Button size="lg" mb={2} ml={5} variant="outline">
-            Share
+          <Button height="60px"  fontSize="lg" px={8}  mb={2} ml={5} variant="outline">
+            <CiShare2  size={30} />
           </Button>
 
           <Box mt={6}>
